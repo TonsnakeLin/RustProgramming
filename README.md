@@ -47,7 +47,8 @@ we waked up thread 100 times every round.
 | 3     | 46.31 | p80: Some(60), p95: Some(101), max: Some(303) |
 | 4     | 44.54 | p80: Some(57), p95: Some(99), max: Some(276) |
 | 5     | 45.4  | p80: Some(66), p95: Some(92), max: Some(208) |
-|       |       |                                          |
+| 6     | 40.05 | p80: Some(56), p95: Some(93), max: Some(134) |
+| 7     | 37.2  | p80: Some(57), p95: Some(80), max: Some(93) |
 
 
 
@@ -82,13 +83,15 @@ Linux localhost.localdomain 4.18.0-305.10.2.el7.aarch64 #1 SMP Fri Jul 23 21:19:
 
 we waked up thread 100 times every round.
 
-| round | avg  | extra info |
-| ----- | ---- | ---------- |
-|       |      |            |
-|       |      |            |
-|       |      |            |
-|       |      |            |
-|       |      |            |
+| round | avg  | extra info                               |
+| ----- | ---- | ---------------------------------------- |
+| 1     | 8.42 | p80: Some(10), p95: Some(12), max: Some(14) |
+| 2     | 8.32 | p80: Some(10), p95: Some(11), max: Some(12) |
+| 3     | 7.24 | p80: Some(9), p95: Some(10), max: Some(15) |
+| 4     | 8.12 | p80: Some(9), p95: Some(11), max: Some(42) |
+| 5     | 7.4  | p80: Some(9), p95: Some(11), max: Some(13) |
+| 6     | 8.32 | p80: Some(10), p95: Some(12), max: Some(22) |
+|       |      |                                          |
 
 
 
