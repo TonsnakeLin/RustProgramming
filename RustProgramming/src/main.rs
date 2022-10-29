@@ -166,10 +166,6 @@ fn thread_wake_up_time3() {
         thread::sleep(time::Duration::from_secs(1)); 
     }    
 }
-
-
-
 fn main() {
-    thread_wake_up_time();
-    
+    thread_wake_up_time();    
 }
