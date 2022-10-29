@@ -1,7 +1,11 @@
 use tokio::net::TcpListener;
-use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
-#[tokio::main]
-async fn main() -> Result<dyn std::error::Error>{
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+use futures::executor::block_on;
+
+
+#[allow(dead_code)]
+async fn tcp_receive_send() -> Result<(), Box<dyn std::error::Error>> {
     let listener = TcpListener::bind("127.0.0.1:8080").await?;
 
     loop {
@@ -29,4 +33,19 @@ async fn main() -> Result<dyn std::error::Error>{
             }
         });
     }    
+}
+
+async fn hello_world() {
+    println!("hello world");
+}
+
+fn print_hello_world() {
+    block_on(hello_world())
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>>{
+
+    print_hello_world();
+    Ok(())
 }

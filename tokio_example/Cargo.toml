@@ -7,4 +7,8 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4"
-tokio = { version = "1.20", features = ["full"] }
+tokio = { version = "1.20", features = ["rt-multi-thread", "net", "macros", "sync", "io-util"] }
+futures = { version = "0.3", features = ["thread-pool", "compat"] }
+futures-executor = "0.3.1"
+futures-timer = "3.0"
+futures-util = { version = "0.3.1", default-features = false, features = ["io", "async-await"] }
