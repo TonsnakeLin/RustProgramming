@@ -26,6 +26,8 @@ dist
 tmp
 /bin
 
+tokio_example/target
+
 # fuzzing hack, see fuzz/cli.rs
 fuzz-incremental/
 
