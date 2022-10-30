@@ -5,6 +5,8 @@ use std::sync::mpsc::channel;
 use std::time::Instant;
 use std::thread;
 
+use futures::executor::block_on;
+
 
 fn wait_thread_started() {
     let pair = Arc::new((Mutex::new(false), Condvar::new()));
@@ -96,7 +98,6 @@ fn thread_wake_up_time() {
     println!("p80: {:?}, p95: {:?}, max: {:?}", vec3.get(p80), vec3.get(p95), vec3.get(len - 1));
 }
 
-
 fn thread_wake_up_time2() {
     let pair = Arc::new((Mutex::new(false), Condvar::new()));
     let pair2 = Arc::clone(&pair);
@@ -166,6 +167,33 @@ fn thread_wake_up_time3() {
         thread::sleep(time::Duration::from_secs(1)); 
     }    
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+async fn learn_song() {
+    println!("learn song");
+}
+
+async fn sing_song() {
+    println!("sing song");
+}
+
+async fn dance() {
+    println!("dance");
+}
+
+async fn learn_and_sing() {
+    learn_song().await;
+    sing_song().await;
+}
+
+async fn song_or_dance() {
+    let f1 = learn_and_sing();
+    let f2 = dance();
+    futures::join!(f1, f2)
+}
+
 fn main() {
-    thread_wake_up_time();    
+    block_on(song_or_dance());
+    println!("main thread end");
 }
