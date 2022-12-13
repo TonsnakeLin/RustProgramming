@@ -235,6 +235,8 @@ impl Future for TimerFuture {
     type Output = ();
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         // Look at the shared state to see if the timer has already completed.
+        let handle = thread::current();
+        println!("TimerFuture::poll, [{:?}]", handle);
         let mut shared_state = self.shared_state.lock().unwrap();
         if shared_state.completed {
             Poll::Ready(())
@@ -266,7 +268,7 @@ impl TimerFuture {
             waker: None,
         }));
         let handle = thread::current();
-        println!("TimerFuture::new, thread {:?}", handle);
+        println!("TimerFuture::new, [{:?}]", handle);
         // Spawn the new thread
         let thread_shared_state = shared_state.clone();
         thread::spawn(move || {
@@ -340,7 +342,7 @@ impl ArcWake for Task {
 impl Executor {
     fn run(&self) {
         let handle = thread::current();
-        println!("Executor thread {:?}", handle);
+        println!("Executor thread [{:?}]", handle);
         while let Ok(task) = self.ready_queue.recv() {
             // Take the future, and if it has not yet completed (is still Some),
             // poll it in an attempt to complete it.
@@ -353,14 +355,14 @@ impl Executor {
                 // `Pin<Box<dyn Future<Output = T> + Send + 'static>>`.
                 // We can get a `Pin<&mut dyn Future + Send + 'static>`
                 // from it by calling the `Pin::as_mut` method.
-                println!("executor begin to run poll");
+                println!("Executor begin to run poll, [{:?}]", handle);
                 if future.as_mut().poll(context).is_pending() {
                     // We're not done processing the future, so put it
                     // back in its task to be run again in the future.
-                    println!("executor ruturned pending after polling");
+                    println!("Executor ruturned pending after polling, [{:?}]", handle);
                     *future_slot = Some(future);
                 } else {
-                    println!("executor ruturned ready after polling");
+                    println!("executor ruturned ready after polling, [{:?}]", handle);
                 }                
             }
         }
