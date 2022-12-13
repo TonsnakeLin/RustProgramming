@@ -359,8 +359,9 @@ impl Executor {
                     // back in its task to be run again in the future.
                     println!("executor ruturned pending after polling");
                     *future_slot = Some(future);
-                }
-                println!("executor ruturned ready after polling");
+                } else {
+                    println!("executor ruturned ready after polling");
+                }                
             }
         }
     }
