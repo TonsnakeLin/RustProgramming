@@ -265,16 +265,19 @@ impl TimerFuture {
             completed: false,
             waker: None,
         }));
-
+        let handle = thread::current();
+        println!("TimerFuture::new, thread {:?}", handle);
         // Spawn the new thread
         let thread_shared_state = shared_state.clone();
         thread::spawn(move || {
+            println!("TimerFuture thread begin");
             thread::sleep(duration);
             let mut shared_state = thread_shared_state.lock().unwrap();
             // Signal that the timer has completed and wake up the last
             // task on which the future was polled, if one exists.
             shared_state.completed = true;
             if let Some(waker) = shared_state.waker.take() {
+                println!("TimerFuture thread completed");
                 waker.wake()
             }
         });
@@ -336,6 +339,8 @@ impl ArcWake for Task {
 
 impl Executor {
     fn run(&self) {
+        let handle = thread::current();
+        println!("Executor thread {:?}", handle);
         while let Ok(task) = self.ready_queue.recv() {
             // Take the future, and if it has not yet completed (is still Some),
             // poll it in an attempt to complete it.
@@ -348,11 +353,14 @@ impl Executor {
                 // `Pin<Box<dyn Future<Output = T> + Send + 'static>>`.
                 // We can get a `Pin<&mut dyn Future + Send + 'static>`
                 // from it by calling the `Pin::as_mut` method.
+                println!("executor begin to run poll");
                 if future.as_mut().poll(context).is_pending() {
                     // We're not done processing the future, so put it
                     // back in its task to be run again in the future.
+                    println!("executor ruturned pending after polling");
                     *future_slot = Some(future);
                 }
+                println!("executor ruturned ready after polling");
             }
         }
     }
@@ -378,6 +386,8 @@ fn main() {
     // Spawn a task to print before and after waiting on a timer.
     spawner.spawn(async {
         println!("howdy!");
+        let handle = thread::current();
+        println!("Executing future thread {:?}", handle);
         // Wait for our timer future to complete after two seconds.
         TimerFuture::new(Duration::new(2, 0)).await;
         println!("done!");
@@ -390,6 +400,6 @@ fn main() {
     // Run the executor until the task queue is empty.
     // This will print "howdy!", pause, and then print "done!".
     executor.run();
-    
+
     println!("main thread end");
 }
