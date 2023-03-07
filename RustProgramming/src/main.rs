@@ -58,38 +58,39 @@ fn thread_wake_up_time() {
     let mut vec2 = Vec::new();
     let mut vec1 = Vec::new();
     let one_second = time::Duration::from_secs(1);
+    let five_ms = time::Duration::from_millis(5);
 
     thread::spawn(move|| {
         let (lock, cvar) = &*pair2;        
         for _i in 0..100 {
-            println!("waiter: lock");
+            // println!("waiter: lock");
             let mut flag = lock.lock().unwrap();
-            println!("enter condvar wait");
+            // println!("enter condvar wait");
             *flag = true;
             flag = cvar.wait(flag).unwrap();
             let now = Instant::now();
             drop(flag);
             
-            println!("after time:{:?}", now);
+            // println!("after time:{:?}", now);
             sender.send(now).unwrap();
-            println!("waiter: unlock");
+            // println!("waiter: unlock");
         }
     });    
     thread::sleep(one_second);
     let (lock, cvar) = &*pair;
     for _i in 0..100 {
-        println!("notifier: lock");
+        // println!("notifier: lock");
         let flag = lock.lock().unwrap();
         // We notify the condvar that the value has changed.
         let now = Instant::now();        
         cvar.notify_one();
         drop(flag);
-        println!("before time:{:?}", now);
+        // println!("before time:{:?}", now);
         vec1.push(now);  
         let now2 = receiver.recv().unwrap();
         vec2.push(now2);
-        println!("notifier: unlock");
-        thread::sleep(one_second);
+        // println!("notifier: unlock");
+        thread::sleep(five_ms);
     }
 
     let len = std::cmp::min(vec1.len(), vec2.len());
@@ -102,18 +103,17 @@ fn thread_wake_up_time() {
         sum += delta;
         vec3.push(delta);
     }
-    // println!("vec1: {:?}", vec1);
-    // println!("vec2: {:?}", vec2);
     
-    println!("avg: {:?}", sum as f64/len as f64);
+    // println!("avg: {:?}", sum as f64/len as f64);
+    let avg = sum as f64/len as f64;
     vec3.sort();
-    println!("vec3: {:?}", vec3);
+    // println!("vec3: {:?}", vec3);
 
 
-    let p80 = (len as f64 * 0.8) as usize;
-    let p95 = (len as f64 * 0.95) as usize;
+    let p50 = (len as f64 * 0.5) as usize;
+    let p99 = (len as f64 * 0.99) as usize;
     
-    println!("p80: {:?}, p95: {:?}, max: {:?}", vec3.get(p80), vec3.get(p95), vec3.get(len - 1));
+    println!("avg: {:?} median: {:?}, p99: {:?}, pmax: {:?}", avg, vec3.get(p50), vec3.get(p99), vec3.get(len - 1));
 }
 
 fn thread_wake_up_time2() {
@@ -184,6 +184,13 @@ fn thread_wake_up_time3() {
         drop(started);
         thread::sleep(time::Duration::from_secs(1)); 
     }    
+}
+
+
+fn test_wakeup_10times() {
+    for _i in 0..10 {
+        thread_wake_up_time();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -379,11 +386,7 @@ fn new_executor_and_spawner() -> (Executor, Spawner) {
 }
 
 
-
-fn main() {
-
-    // block_on(song_or_dance());
-
+fn async_programing_case1() {
     let (executor, spawner) = new_executor_and_spawner();
 
     // Spawn a task to print before and after waiting on a timer.
@@ -403,6 +406,14 @@ fn main() {
     // Run the executor until the task queue is empty.
     // This will print "howdy!", pause, and then print "done!".
     executor.run();
+}
+
+
+fn main() {
+
+    test_wakeup_10times();
+
+    // async_programing_case1();
 
     println!("main thread end");
 }
