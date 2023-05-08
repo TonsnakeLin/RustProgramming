@@ -25,6 +25,14 @@ use {
     },
 };
 
+use walkdir::WalkDir;
+
+fn test_walkdir_into_iter() {
+    for entry in WalkDir::new("/data2/michael_tidbv62/tmp2").into_iter() {
+        println!("{}", entry?.path().display());
+    }
+}
+
 
 fn wait_thread_started() {
     let pair = Arc::new((Mutex::new(false), Condvar::new()));
@@ -411,9 +419,11 @@ fn async_programing_case1() {
 
 fn main() {
 
-    test_wakeup_10times();
+    // test_wakeup_10times();
 
     // async_programing_case1();
+
+    test_walkdir_into_iter();
 
     println!("main thread end");
 }
