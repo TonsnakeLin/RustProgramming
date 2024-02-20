@@ -29,7 +29,7 @@ use walkdir::WalkDir;
 
 fn test_walkdir_into_iter() {
     for entry in WalkDir::new("/data2/michael_tidbv62/tmp2").into_iter() {
-        println!("{}", entry?.path().display());
+        println!("{}", entry.unwrap().path().display());
     }
 }
 
@@ -416,6 +416,90 @@ fn async_programing_case1() {
     executor.run();
 }
 
+#[derive(Clone, Debug)]
+pub struct DataKeyManager {
+    method: i32,
+}
+
+fn test_arc_clone() {
+    let dm = DataKeyManager {
+        method:1,
+    };
+    println!("dm {}", dm.method);
+    let km = Arc::new(dm);
+    let mut km2 = km.clone();
+    let km3 = km.clone();
+    let km4 = km.clone();
+    
+    Arc::make_mut(&mut km2).method = 20;
+
+
+    println!("km {}, km2 {}, km3 {}", km.method, km2.method, km3.method);
+
+    let tmp1: Option<i16> = None;
+    let tmp2 = tmp1.clone();
+    println!("tmp1 {:?}, tmp2 {:?}", tmp1, tmp2);
+
+    
+}
+
+fn test_strip_suffix1() {
+    println!("test_strip_suffix1()");
+    let src: Vec<u8> = vec![143, 150, 146, 251, 171, 91, 0, 0, 0];
+    let mut pos = src.len() - 1;
+    while pos != 0 && src.get(pos) == Some(&0)  {
+        println!("pos {}, x {:?}", pos, src.get(pos));
+        pos -= 1;
+        
+    }
+    let mut dest = src;
+    dest.truncate(pos + 1);
+    println!("src: {:?}", dest);
+}
+
+fn test_strip_suffix2() {
+    println!("test_strip_suffix2()");
+    let src: Vec<u8> = vec![143, 150, 146, 251, 171, 91, 0, 0, 0];
+    let mut pos = src.len() - 1;
+    while pos != 0 && src.get(pos) == Some(&0)  {
+        println!("pos {}, x {:?}", pos, src.get(pos));
+        pos -= 1;
+        
+    }
+    let (v1, _) = src.split_at(pos + 1);
+    println!("src: {:?}", v1);
+
+    println!("test_strip_suffix2-1()");
+    let src2: Vec<u8> = vec![143, 150, 146, 251, 171, 91];
+    let mut pos = src2.len() - 1;
+    while pos != 0 && src2.get(pos) == Some(&0)  {
+        pos -= 1;
+        
+    }
+    let (v2, _) = src2.split_at(pos + 1);
+    println!("v2: {:?}", v2);   
+
+    println!("test_strip_suffix2-2()");
+    let src3: Vec<u8> = vec![0];
+    let mut pos = src3.len() - 1;
+    while pos != 0 && src3.get(pos) == Some(&0)  {
+        pos -= 1;
+        
+    }
+    let (v3, _) = src3.split_at(pos + 1);
+    println!("v3: {:?}", v3);   
+}
+
+fn test_strip_suffix3() {
+    println!("test_strip_suffix3()");
+    let src: Vec<u8> = vec![143, 150, 146, 251, 171, 91, 0, 0, 0];
+    let v = String::from_utf8(src);
+    if v.is_err() {
+        return;
+    }
+    println!("src: {:?}", Vec::from(v.unwrap()));
+}
+
 
 fn main() {
 
@@ -423,7 +507,12 @@ fn main() {
 
     // async_programing_case1();
 
-    test_walkdir_into_iter();
+    // test_walkdir_into_iter();
+
+    // test_arc_clone();
+    test_strip_suffix1();
+    test_strip_suffix2();
+    // test_strip_suffix3();
 
     println!("main thread end");
 }
