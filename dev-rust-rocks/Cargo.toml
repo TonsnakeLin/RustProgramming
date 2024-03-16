@@ -1,0 +1,12 @@
+[package]
+name = "dev-rust-rocks"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies.rocksdb]
+git = "https://github.com/tikv/rust-rocksdb.git"
+
+[dependencies]
+common_lib = {path = "/data2/michael_devtidb2/github/tonesnake/RustProgramming/common-lib"}
