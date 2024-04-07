@@ -45,3 +45,7 @@ core.*
 
 # Ignore all logs
 *.log
+
+dev-rust-rocks/target
+
+common-lib/target

@@ -10,3 +10,22 @@ git = "https://github.com/tikv/rust-rocksdb.git"
 
 [dependencies]
 common_lib = {path = "/data2/michael_devtidb2/github/tonesnake/RustProgramming/common-lib"}
+
+[profile.dev.package.librocksdb_sys]
+debug = true
+opt-level = 0
+
+[profile.dev.package.libtitan_sys]
+debug = true
+opt-level = 0
+
+[profile.dev]
+opt-level = 0
+debug = true
+codegen-units = 4
+lto = false
+incremental = true
+panic = 'unwind'
+debug-assertions = true
+overflow-checks = false
+rpath = false
