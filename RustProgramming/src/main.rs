@@ -25,6 +25,8 @@ use {
     },
 };
 
+use common_lib::stdsync::test_arc_strong_count;
+
 use walkdir::WalkDir;
 
 fn test_walkdir_into_iter() {
@@ -510,9 +512,11 @@ fn main() {
     // test_walkdir_into_iter();
 
     // test_arc_clone();
-    test_strip_suffix1();
-    test_strip_suffix2();
+    // test_strip_suffix1();
+    // test_strip_suffix2();
     // test_strip_suffix3();
+
+    test_arc_strong_count();
 
     println!("main thread end");
 }

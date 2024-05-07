@@ -12,3 +12,5 @@ futures-executor = "0.3.1"
 futures-timer = "3.0"
 futures-util = { version = "0.3.1", default-features = false, features = ["io", "async-await"] }
 walkdir = "2"
+
+common_lib = {path = "/data2/michael_devtidb2/github/tonesnake/RustProgramming/common-lib"}
