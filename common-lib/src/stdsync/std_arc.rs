@@ -19,7 +19,8 @@ pub fn test_arc_strong_count() {
     let _ = Arc::clone(&arc1);
     println!("arc1 strong_count: {}", Arc::strong_count(&arc1));
     println!("arc2 strong_count: {}", Arc::strong_count(&arc2));
-    let weak_arc2 = Arc::downgrade(&arc2);
+    #[warn(unused_variables)]
+    let _ = Arc::downgrade(&arc2);
     println!("arc1 strong_count: {}", Arc::strong_count(&arc1));
     println!("arc2 strong_count: {}", Arc::strong_count(&arc2));
     println!("arc2 weak_count: {}", Arc::weak_count(&arc2));

@@ -5,12 +5,33 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+myfeatures = ["option_opeator/myfeatures"]
+myfeatures2 = ["option_opeator/myfeatures2"]
+
 [dependencies]
 chrono = "0.4"
+crypto = { workspace = true }
 futures = { version = "0.3"}
 futures-executor = "0.3.1"
 futures-timer = "3.0"
 futures-util = { version = "0.3.1", default-features = false, features = ["io", "async-await"] }
+option_opeator = { workspace = true }
+openssl = { workspace = true }
+openssl-sys = { workspace = true }
 walkdir = "2"
 
 common_lib = {path = "/data2/michael_devtidb2/github/tonesnake/RustProgramming/common-lib"}
+
+[workspace]
+resolver = "2"
+members = [
+    "components/crypto",
+    "components/option_opeator"
+]
+
+[workspace.dependencies]
+crypto = {path = "components/crypto"}
+option_opeator = {path = "components/option_opeator"}
+openssl = "0.10"
+openssl-sys = "0.9"

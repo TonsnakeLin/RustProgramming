@@ -14,6 +14,13 @@ use std::{
     time::Duration,
 };
 
+use option_opeator::{option_env_macro, maybe_enable_mycfg};
+use crypto::{log_status, maybe_enable};
+
+#[cfg(feature = "myfeatures")]
+use option_opeator::print_my_feature;
+#[cfg(feature = "myfeatures2")]
+use option_opeator::print_my_feature2;
 ///////////////////////////////////////////////////////////////////////////////////
 use {
     futures::{
@@ -504,7 +511,6 @@ fn test_strip_suffix3() {
 
 
 fn main() {
-
     // test_wakeup_10times();
 
     // async_programing_case1();
@@ -516,7 +522,24 @@ fn main() {
     // test_strip_suffix2();
     // test_strip_suffix3();
 
-    test_arc_strong_count();
+    // test_arc_strong_count();
+
+    option_env_macro();
+    maybe_enable();
+    log_status();
+
+    println!("
+**********************************************************************
+test maybe_enable_mycfg
+**********************************************************************
+    ");
+    maybe_enable_mycfg();
+
+    #[cfg(feature = "myfeatures")]
+    print_my_feature();
+
+    #[cfg(feature = "myfeatures2")]
+    print_my_feature2();
 
     println!("main thread end");
 }
