@@ -28,6 +28,8 @@ tmp
 
 tokio_example/target
 
+tokio_example2/target
+
 # fuzzing hack, see fuzz/cli.rs
 fuzz-incremental/
 

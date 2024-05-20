@@ -835,12 +835,15 @@ name = "tokio_example"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "clap",
  "futures 0.3.30",
  "futures-executor",
  "futures-timer",
  "futures-util",
  "mini-redis",
  "my_redis",
+ "serde",
+ "serde_derive",
  "tokio",
 ]
 
