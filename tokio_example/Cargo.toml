@@ -26,3 +26,7 @@ members = [
 
 [workspace.dependencies]
 my_redis = {path = "components/my_redis"}
+
+[profile.dev]
+opt-level = 0
+debug = 2

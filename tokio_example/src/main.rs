@@ -1,6 +1,7 @@
 use clap::{crate_authors, App, Arg};
 use tokio::runtime::{Builder, Runtime};
 use std::sync::Arc;
+#[allow(unused_imports)]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use mini_redis::Result;
@@ -65,9 +66,8 @@ async fn main() -> Result<()>{
     println!("
     ");
 
-    let rt = new_multi_thread_runtime();
-
     if config.block_in_async_driver {
+        let rt = new_multi_thread_runtime();
         rt.block_on(async {
             println!("this is executed by block on")
         });
