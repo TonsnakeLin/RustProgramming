@@ -1,6 +1,7 @@
 use clap::{crate_authors, App, Arg};
 use tokio::runtime::{Builder, Runtime};
 use std::sync::Arc;
+use std::time::Duration;
 #[allow(unused_imports)]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -24,12 +25,14 @@ fn new_multi_thread_runtime() -> Arc<Runtime> {
 #[serde(rename_all = "kebab-case")]
 pub struct TokioExampleConfig {
     pub block_in_async_driver: bool, 
+    pub redis_case: bool,
 }   
 
 impl Default for TokioExampleConfig {
     fn default() -> TokioExampleConfig {
         TokioExampleConfig { 
             block_in_async_driver: false,
+            redis_case: false,
          }
     }
 }
@@ -55,16 +58,29 @@ async fn main() -> Result<()>{
         .help("execute the case blocking in the async driver")
         .takes_value(true),
     )
+    .arg(
+        Arg::with_name("redis-case")
+        .short("redis")
+        .long("redis-case")
+        .value_name("bool")
+        .takes_value(true),
+    )
     .get_matches();
 
     let mut config = TokioExampleConfig::default();
     if let Some(biad) = app.value_of("block-in-async-driver") {
         config.block_in_async_driver = get_bool_from_string(biad);
     }
+    if let Some(redis_case) = app.value_of("redis-case") {
+        config.redis_case = get_bool_from_string(redis_case);
+    }
 
-    redis_get_set().await?;
-    println!("
-    ");
+    if config.redis_case {
+        println!("redis_case is true");
+        redis_get_set().await?;
+        println!("
+        ");
+    }
 
     if config.block_in_async_driver {
         let rt = new_multi_thread_runtime();
@@ -72,6 +88,18 @@ async fn main() -> Result<()>{
             println!("this is executed by block on")
         });
     }
+
+    let h1 = tokio::task::spawn(async {
+        tokio::time::sleep(Duration::from_millis(500)).await;
+        println!("thread [{:?}], task is executed", std::thread::current());
+    });
+    let h2 = tokio::task::spawn(async {
+        tokio::time::sleep(Duration::from_millis(500)).await;
+        println!("thread [{:?}], task is executed", std::thread::current());
+    });
+    h1.await?;
+    h2.await?;
+    println!("mock-point-1");
 
     Ok(())
 }
